@@ -1,0 +1,21 @@
+services:
+  kali:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kali-vnc:latest
+    container_name: kali-vnc
+    ports:
+      - "127.0.0.1:5901:5901"
+    volumes:
+      - kali-home:/root
+    environment:
+      - VNC_PASSWORD=${VNC_PASSWORD:-}
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    restart: unless-stopped
+
+volumes:
+  kali-home:
+    name: kali-home
