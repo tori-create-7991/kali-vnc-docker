@@ -5,28 +5,20 @@ Colima上での運用を前提とする。自分の環境・CTF・学習用途�
 
 ## 構成
 
-- `setup.sh`: Docker DesktopからColimaへの移行スクリプト(このマシン固有のセットアップ)
+- `setup.sh`: Colima + Docker CLIの新規セットアップスクリプト
 - `kali-vnc/`: Kali Linux + VNCコンテナの定義(Dockerfile / entrypoint.sh / docker-compose.yml)
 
 ## 前提条件
 
 - macOS (M4 MacBook Air / arm64 で動作確認)
 - Homebrew インストール済み
-- Docker Desktopがインストール済みで `docker context ls` に `desktop-linux` が存在する(移行前提)
 
 ## セットアップ手順
 
-### 1. Colimaへ移行する
+### 1. Colima + Dockerをセットアップする
 
 ```bash
 ./setup.sh
-```
-
-Docker Desktop併存方針を対話で確認される。非対話実行したい場合:
-
-```bash
-./setup.sh --stop-docker-desktop   # Docker Desktop.appを終了しColimaのみ運用(推奨)
-./setup.sh --keep-docker-desktop   # Docker Desktopを残し手動でcontext切り替え
 ```
 
 ### 2. Kaliコンテナをビルド・起動する
