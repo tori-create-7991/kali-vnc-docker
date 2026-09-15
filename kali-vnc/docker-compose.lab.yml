@@ -1,0 +1,20 @@
+# 攻撃検証練習用の脆弱ターゲット群(オーバーレイ)。
+# ホストへのポート公開なし。kali コンテナと同一 compose ネットワーク内でのみ到達可能。
+# 使い方: docker compose -f docker-compose.yml -f docker-compose.lab.yml up -d --build
+#
+# 意図的に脆弱な使い捨てコンテナのため restart ポリシーは既定(no)のまま。
+# ホスト/Colima再起動時に無断で自動復活しないようにする。
+# dvwa は host 公開設定(ports:)を絶対に追加しないこと(意図的に極めて脆弱なため)。
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    mem_limit: 1g
+    cpus: 1.5
+
+  weak-target:
+    build:
+      context: ./lab/weak-target
+    container_name: weak-target
+    mem_limit: 256m
+    cpus: 0.5

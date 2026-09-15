@@ -7,6 +7,7 @@ Colima上での運用を前提とする。自分の環境・CTF・学習用途�
 
 - `setup.sh`: Colima + Docker CLIの新規セットアップスクリプト
 - `kali-vnc/`: Kali Linux + VNCコンテナの定義(Dockerfile / entrypoint.sh / docker-compose.yml)
+- `kali-vnc/docker-compose.lab.yml` / `kali-vnc/lab/`: 攻撃検証練習用の脆弱ターゲット群(オプション、オーバーレイ)
 
 ## 前提条件
 
@@ -38,6 +39,20 @@ docker compose up -d --build
 - **シェルに入る**: `docker exec -it kali-vnc bash`
 - **停止**: `docker compose down`(`kali-home` ボリュームは残るのでデータは消えない)
 - **完全削除**: `docker compose down -v`(ボリュームごと削除、`/root` 配下のデータが消える点に注意)
+
+## 攻撃検証ラボ(オプション)
+
+nmap / hydra / sqlmap 等の攻撃検証を自分専用の閉域環境で練習するための脆弱ターゲット群。ホストへのポート公開は一切せず、kaliコンテナと同一の compose ネットワーク内でのみ到達可能。
+
+```bash
+cd kali-vnc
+docker compose -f docker-compose.yml -f docker-compose.lab.yml up -d --build
+```
+
+- **`dvwa`**(`vulnerables/web-dvwa`): Web検証用。初回のみブラウザで `http://dvwa/setup.php` → 「Create / Reset Database」を実行してからログイン(`admin` / `password`)。意図的に極めて脆弱・パッチ未適用のイメージなので、`ports:` を追加してホストへ公開しないこと
+- **`weak-target`**: 認証情報攻撃練習用の自作SSHターゲット。デフォルト認証情報は `labuser` / `password123`(コンテナ内非特権ユーザー、root昇格経路なし)
+- どちらも意図的に使い捨て設計(`restart` ポリシー未設定)のため、Colima/ホスト再起動時に自動復活しない
+- ラボ環境の停止: `docker compose -f docker-compose.yml -f docker-compose.lab.yml down`(dvwaのDBはコンテナ内のみでボリューム化していないため、down で消える)
 
 ## トラブルシューティング
 

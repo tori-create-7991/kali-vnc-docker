@@ -40,11 +40,16 @@ if [[ -n "${PASSWORD:-}" ]]; then
   fi
 fi
 
-if [[ ! -f "$XSTARTUP" ]]; then
+if [[ ! -f "$XSTARTUP" ]] || ! grep -q 'autocutsel' "$XSTARTUP"; then
+  log "Writing/upgrading xstartup (missing or pre-autocutsel version detected)."
   cat > "$XSTARTUP" <<'EOF'
 #!/bin/sh
 unset SESSION_MANAGER
 unset DBUS_SESSION_BUS_ADDRESS
+# TightVNC 1.3.10のXtightvncはCLIPBOARD selectionを直接扱わないため、
+# autocutselでPRIMARY/CLIPBOARDを橋渡しし、Cmd+C/Cmd+Vでのコピペを通す。
+autocutsel -fork &
+autocutsel -selection PRIMARY -fork &
 exec startxfce4
 EOF
   chmod +x "$XSTARTUP"

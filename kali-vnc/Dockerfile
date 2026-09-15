@@ -13,6 +13,7 @@ RUN apt-get update \
         dbus-x11 \
         tightvncserver \
         xfonts-base \
+        autocutsel \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
