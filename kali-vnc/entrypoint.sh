@@ -40,7 +40,8 @@ if [[ -n "${PASSWORD:-}" ]]; then
   fi
 fi
 
-if [[ ! -f "$XSTARTUP" ]]; then
+if [[ ! -f "$XSTARTUP" ]] || ! grep -q 'autocutsel' "$XSTARTUP"; then
+  log "Writing/upgrading xstartup (missing or pre-autocutsel version detected)."
   cat > "$XSTARTUP" <<'EOF'
 #!/bin/sh
 unset SESSION_MANAGER
