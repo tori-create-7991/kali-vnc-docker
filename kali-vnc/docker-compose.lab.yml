@@ -1,0 +1,14 @@
+# 攻撃検証練習用の脆弱ターゲット群(オーバーレイ)。
+# ホストへのポート公開なし。kali コンテナと同一 compose ネットワーク内でのみ到達可能。
+# 使い方: docker compose -f docker-compose.yml -f docker-compose.lab.yml up -d --build
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    restart: unless-stopped
+
+  weak-target:
+    build:
+      context: ./lab/weak-target
+    container_name: weak-target
+    restart: unless-stopped
